@@ -164,14 +164,20 @@ public class MotorEncoderRunner {
         for(MotorEncoderMovement movement : motorEncoderMovements)
         {
             movement.SetUseEncoder();
+        }
+
+        for(MotorEncoderMovement movement : motorEncoderMovements)
+        {
             movement.Start();
         }
 
         if(autoStop) {
             runtime.reset();
 
-            while (MotorsBusy() && lopmode.opModeIsActive()) {
-                if (runtime.seconds() >= cutoffTimeSeconds) {
+            while (MotorsBusy() && lopmode.opModeIsActive())
+            {
+                if(runtime.seconds() >= cutoffTimeSeconds)
+                {
                     break;
                 }
             }

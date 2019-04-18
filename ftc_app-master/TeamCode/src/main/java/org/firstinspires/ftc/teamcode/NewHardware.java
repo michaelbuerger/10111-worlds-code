@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -29,7 +31,7 @@ public class NewHardware {
 
     public final double liftSpeed = 1;
     public final double driveSpeed = 0.85;
-    public final double turnSpeed = 1;
+    public final double turnSpeed = 0.75;
     public final double angledTurnSpeed = 1;
     public final double mineralArmSpeed = 1;
     public final double mineralCollectSpeed = 0.5;
@@ -38,10 +40,10 @@ public class NewHardware {
 
     public final double UP_TOTEM_POSITION = 0.5;
     public final double DOWN_TOTEM_POSITION = 1;
-    public final double UP_BOX_POSITION_1 = 0.65;
-    public final double UP_BOX_POSITION_2 = 0.50;
+    public final double UP_BOX_POSITION_1 = 0.48;
+    public final double UP_BOX_POSITION_2 = 0.66;
     public final double DOWN_BOX_POSITION = 0.12;
-    public final double TOTEM_SHAKE_TOGGLE_MILLI = 500;
+    public final double TOTEM_SHAKE_TOGGLE_MILLI = 450;
 
     public enum LR_Direction
     {
@@ -53,7 +55,7 @@ public class NewHardware {
 
     /* --- Specifically configured to 10111 (2018-2019) Worlds drive train --- */
     public final int WHEEL_DIAMETER_INCHES = 4;
-    public final double LIFT_REVS = 5.15; // How many revolutions the lift motor must turn to bring the bot down or up from hook
+    public final double LIFT_REVS = 5.15; // How many revolutions the lift motor must turn to bring the bot up or down from the hook
     /* --- Specifically configured to 10111 (2018-2019) Worlds drive train --- */
 
     public void Initialize(HardwareMap hwMap, Telemetry telemetry)
@@ -123,13 +125,20 @@ public class NewHardware {
 
     /* Alternatives to FTC SDK functions to fix disconnect issues */
 
-    public void activeSleep(long length, String msg) // Milliseconds
+    public void activeSleep(LinearOpMode lopmode, long length, String msg) // Milliseconds
     {
         ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
         while(timer.milliseconds() <= length)
         {
-
+            lopmode.telemetry.addLine(msg);
+            lopmode.telemetry.update();
+            lopmode.sleep(250);
         }
+    }
+
+    public void activeSleep(LinearOpMode lopmode, long length) // Milliseconds
+    {
+        activeSleep(lopmode, length, "Maintaining WiFi Direct Connection");
     }
 
     /* Alternatives to FTC SDK functions to fix disconnect issues */

@@ -42,7 +42,8 @@ public class DriverPeriod extends OpMode {
     @Override
     public void init_loop() // Loop after driver presses init
     {
-
+        telemetry.addLine("Maintaining WiFi Direct Connection");
+        telemetry.update();
     }
 
     @Override
@@ -243,6 +244,9 @@ public class DriverPeriod extends OpMode {
         }*/
 
         hw.totemServo.setPosition(hw.UP_TOTEM_POSITION);
+
+        telemetry.addLine("Maintaining WiFi Direct Connection");
+        telemetry.update();
     }
 
     @Override

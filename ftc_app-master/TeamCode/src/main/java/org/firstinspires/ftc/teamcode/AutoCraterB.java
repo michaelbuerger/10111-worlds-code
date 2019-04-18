@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.opencv.core.Point;
 
-@Autonomous(name="Crater A", group="Autonomous")
+@Autonomous(name="Crater B", group="Autonomous")
 public class AutoCraterB extends LinearOpMode {
 
     NewHardware hw = new NewHardware();
@@ -59,101 +59,151 @@ public class AutoCraterB extends LinearOpMode {
             telemetry.addLine("Waiting for start command...");
             telemetry.update();
         }
-        runtime.reset();
 
-        detector.enable();
+        if(opModeIsActive()) {
+            runtime.reset();
 
-        hw.activeSleep(this, 1000); // TODO: Test out different times, find minimum possible for sampling to work properly
+            detector.enable();
 
-        Point goldPosPixels = detector.getScreenPosition();
-        telemetry.addData("Position", goldPosPixels.x);
+            hw.activeSleep(this, 1000); // TODO: Test out different times, find minimum possible for sampling to work properly
 
-        String goldPos = "LEFT";
+            Point goldPosPixels = detector.getScreenPosition();
+            telemetry.addData("Position", goldPosPixels.x);
 
-        if(goldPosPixels.x < detector.downscaleResolution.width/3) // If mineral LEFT pos or not found
-        {
-            goldPos = "LEFT";
-        } else if(goldPosPixels.x < (detector.downscaleResolution.width/3)*2) {
-            goldPos = "MIDDLE";
-        } else if(goldPosPixels.x <= detector.downscaleResolution.width)
-        {
-            goldPos = "RIGHT";
+            String goldPos = "LEFT";
+
+            if (goldPosPixels.x < detector.downscaleResolution.width / 3) // If mineral LEFT pos or not found
+            {
+                goldPos = "LEFT";
+            } else if (goldPosPixels.x < (detector.downscaleResolution.width / 3) * 2) {
+                goldPos = "MIDDLE";
+            } else if (goldPosPixels.x <= detector.downscaleResolution.width) {
+                goldPos = "RIGHT";
+            }
+
+            telemetry.addData("Gold Position", goldPos);
+            telemetry.update();
+
+            detector.disable();
+
+            /* Add movements to do stuff */
+            motorEncoderRunner.AddMovement(hw.motorMovementRevolutions(hw.liftDrive, hw.LIFT_REVS, 1)); // Raise hook
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();
+
+            motorEncoderRunner.AddMovements(hw.straightMovementInches(-3, 1));
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();
+
+            motorEncoderRunner.AddMovements(hw.driftInches(4, NewHardware.LR_Direction.LEFT, 0.35)); // TODO: Fast as possible, 0.35 works fine
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();
+
+            motorEncoderRunner.AddMovements(hw.straightMovementInches(7, 1));
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();
+
+            if (goldPos == "LEFT") {
+                motorEncoderRunner.AddMovements(hw.turnDegrees(137, false, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.straightMovementInches(16, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.straightMovementInches(-10, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.turnDegrees(137, true, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.straightMovementInches(-45, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+            /*motorEncoderRunner.AddMovement(hw.motorMovementRevolutions(hw.mineralArmDrive, 1.5, 1));
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();*/
+
+            } else if (goldPos == "MIDDLE") {
+                motorEncoderRunner.AddMovements(hw.turnDegrees(97, false, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.straightMovementInches(15, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.straightMovementInches(-10, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.turnDegrees(97, true, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.straightMovementInches(-55, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+            /*motorEncoderRunner.AddMovement(hw.motorMovementRevolutions(hw.mineralArmDrive, 1.5, 1));
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();*/
+            } else {
+                // Gold pos == RIGHT
+                motorEncoderRunner.AddMovements(hw.turnDegrees(53, false, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.straightMovementInches(16, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.straightMovementInches(-10, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.turnDegrees(53, true, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+                motorEncoderRunner.AddMovements(hw.straightMovementInches(-65, 1));
+                motorEncoderRunner.StartMovements(30);
+                motorEncoderRunner.Clear();
+
+            /*motorEncoderRunner.AddMovement(hw.motorMovementRevolutions(hw.mineralArmDrive, 1.5, 1));
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();*/
+            }
+
+            motorEncoderRunner.AddMovements(hw.turnDegrees(45, false, 1));
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();
+
+            motorEncoderRunner.AddMovements(hw.straightMovementInches(-46, 1));
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();
+
+            hw.totemServo.setPosition(hw.DOWN_TOTEM_POSITION);
+
+            motorEncoderRunner.AddMovements(hw.straightMovementInches(46, 1));
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();
+
+            hw.totemServo.setPosition(hw.UP_TOTEM_POSITION);
+
+            motorEncoderRunner.AddMovement(hw.motorMovementRevolutions(hw.mineralArmDrive, 1.5, 1));
+            motorEncoderRunner.StartMovements(30);
+            motorEncoderRunner.Clear();
         }
 
-        telemetry.addData("Gold Position", goldPos);
-        telemetry.update();
-
-        detector.disable();
-
-        /* Add movements to do stuff */
-        motorEncoderRunner.AddMovement(hw.motorMovementRevolutions(hw.liftDrive, hw.LIFT_REVS, 1)); // Raise hook
-        motorEncoderRunner.StartMovements(30);
-        motorEncoderRunner.Clear();
-
-        motorEncoderRunner.AddMovements(hw.straightMovementInches(-3, 1));
-        motorEncoderRunner.StartMovements(30);
-        motorEncoderRunner.Clear();
-
-        motorEncoderRunner.AddMovements(hw.driftInches(4, NewHardware.LR_Direction.LEFT, 0.35)); // TODO: Fast as possible, 0.35 works fine
-        motorEncoderRunner.StartMovements(30);
-        motorEncoderRunner.Clear();
-
-        motorEncoderRunner.AddMovements(hw.straightMovementInches(8, 1));
-        motorEncoderRunner.StartMovements(30);
-        motorEncoderRunner.Clear();
-
-        if(goldPos == "LEFT")
-        {
-            motorEncoderRunner.AddMovements(hw.turnDegrees(137, false, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-
-            motorEncoderRunner.AddMovements(hw.straightMovementInches(20, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-
-            motorEncoderRunner.AddMovements(hw.turnDegrees(45, true, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-
-            motorEncoderRunner.AddMovement(hw.motorMovementRevolutions(hw.mineralArmDrive, 1.5, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-
-        } else if(goldPos == "MIDDLE")
-        {
-            motorEncoderRunner.AddMovements(hw.turnDegrees(97, false, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-
-            motorEncoderRunner.AddMovements(hw.straightMovementInches(19, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-
-            motorEncoderRunner.AddMovement(hw.motorMovementRevolutions(hw.mineralArmDrive, 1.5, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-        } else
-        {
-            // Gold pos == RIGHT
-            motorEncoderRunner.AddMovements(hw.turnDegrees(53, false, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-
-            motorEncoderRunner.AddMovements(hw.straightMovementInches(20, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-
-            motorEncoderRunner.AddMovements(hw.turnDegrees(42, false, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
-
-            motorEncoderRunner.AddMovement(hw.motorMovementRevolutions(hw.mineralArmDrive, 1.5, 1));
-            motorEncoderRunner.StartMovements(30);
-            motorEncoderRunner.Clear();
+        while(opModeIsActive()) {
+            telemetry.addLine("Maintaining WiFi Direct Connection");
+            telemetry.update();
         }
-
-        while(opModeIsActive()) { }
 
         MotorEncoderRunner.StopAllRunners();
     }
